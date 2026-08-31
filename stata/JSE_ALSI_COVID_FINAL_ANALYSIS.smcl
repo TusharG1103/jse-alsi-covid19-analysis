@@ -1,0 +1,256 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\Tushar\Desktop\IIT Dhanbad\SEM - 3\Computational Finance\Project\JSE_ALSI_COVID_Stata\JSE_ALSI_COVID_FINAL_ANALYSIS.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}20 Aug 2026, 16:32:32
+
+{com}. describe
+
+{txt}Contains data from {res}JSE_ALSI_COVID_FINAL_ANALYSIS.dta
+{txt} Observations:{res}           501                  
+{txt}    Variables:{res}            12                  20 Aug 2026 16:30
+{txt}{hline}
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+{hline}
+{p 0 48}{res}{bind:date           }{txt}{bind: str10   }{bind:{txt}%10s      }{space 1}{bind:         }{bind:  }{res}{res}Date{p_end}
+{p 0 48}{bind:open           }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Open{p_end}
+{p 0 48}{bind:high           }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}High{p_end}
+{p 0 48}{bind:low            }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Low{p_end}
+{p 0 48}{bind:close          }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Close{p_end}
+{p 0 48}{bind:adjclose       }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Adj Close{p_end}
+{p 0 48}{bind:volume         }{txt}{bind: byte    }{bind:{txt}%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Volume{p_end}
+{p 0 48}{bind:source         }{txt}{bind: str63   }{bind:{txt}%63s      }{space 1}{bind:         }{bind:  }{res}{res}Source{p_end}
+{p 0 48}{bind:date_stata     }{txt}{bind: float   }{bind:{txt}%td       }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:daily_return   }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:abs_daily_ret~n}{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:period         }{txt}{bind: float   }{bind:{txt}%11.0g    }{space 1}{txt}period_lbl{p_end}
+{p 0 48}{space 44}{bind:  }{res}{res}{p_end}
+{txt}{hline}
+Sorted by: {res}date_stata
+
+{com}. tabulate period, missing
+
+     {txt}period {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+  Pre-COVID {c |}{res}         45        8.98        8.98
+{txt}COVID Shock {c |}{res}         19        3.79       12.77
+{txt}   Recovery {c |}{res}        188       37.52       50.30
+{txt}          . {c |}{res}        249       49.70      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        501      100.00
+
+{com}. misstable summarize date_stata close daily_return abs_daily_return
+{txt}{col 64}Obs<.
+{col 49}{c TLC}{hline 30}
+{col 16}{c |}{col 49}{c |} Unique
+{col 7}Variable {c |}{col 22}Obs=.{col 32}Obs>.{col 42}Obs<.{col 49}{c |} values{col 65}Min{col 77}Max
+  {hline 13}{c +}{hline 32}{c +}{hline 30}
+  daily_return {c |}{res}         1{txt}{space 10}{res}       500{txt}  {c |}    500  -9.721263    7.531619
+  abs_daily_~n {c |}{res}         1{txt}{space 10}{res}       500{txt}  {c |}    500   .0037962    9.721263
+  {hline 13}{c BT}{hline 32}{c BT}{hline 30}
+
+{com}. tabstat abs_daily_return, by(period) statistics(n mean sd min max)
+
+{txt}Summary for variables: abs_daily_return
+Group variable: period 
+
+{ralign 11:period} {...}
+{c |}         N      Mean        SD       Min       Max
+{hline 12}{c +}{hline 50}
+{ralign 11:Pre-COVID} {...}
+{c |}{...}
+ {res}       45  .9103714  1.014043  .0450765  4.503052
+{txt}{ralign 11:COVID Shock} {...}
+{c |}{...}
+ {res}       19  3.994944  2.950014  .0179862  9.721263
+{txt}{ralign 11:Recovery} {...}
+{c |}{...}
+ {res}      188  1.019958  .8584045  .0037962  3.880218
+{txt}{hline 12}{c +}{hline 50}
+{ralign 11:Total} {...}
+{c |}{...}
+ {res}      252  1.224693  1.408315  .0037962  9.721263
+{txt}{hline 12}{c BT}{hline 50}
+
+{com}. bysort period: swilk abs_daily_return if period < .
+
+{txt}{hline}
+-> period = Pre-COVID
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable {c |}        Obs{col 33}W{col 45}V{col 55}z       Prob>z
+{hline 13}{c +}{hline 54}
+abs_daily_~n {c |} {res}        45    0.75482     10.617     5.007    0.00000
+
+{txt}{hline}
+-> period = COVID Shock
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable {c |}        Obs{col 33}W{col 45}V{col 55}z       Prob>z
+{hline 13}{c +}{hline 54}
+abs_daily_~n {c |} {res}        19    0.94221      1.319     0.557    0.28888
+
+{txt}{hline}
+-> period = Recovery
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable {c |}        Obs{col 33}W{col 45}V{col 55}z       Prob>z
+{hline 13}{c +}{hline 54}
+abs_daily_~n {c |} {res}       188    0.88473     16.297     6.401    0.00000
+
+{txt}{hline}
+-> period = .
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable {c |}        Obs{col 33}W{col 45}V{col 55}z       Prob>z
+{hline 13}{c +}{hline 54}
+abs_daily_~n {c |} {res}         0          .          .         .          .
+
+{p 0 6 2 67}
+{txt}Note: The normal approximation to the
+sampling distribution of W' is valid for
+4<=n<=2000.{p_end}
+
+{com}. robvar abs_daily_return, by(period)
+
+            {txt}{c |}     Summary of abs_daily_return
+     period {c |}        Mean   Std. dev.       Freq.
+{hline 12}{c +}{hline 36}
+  Pre-COVID {c |}  {res}  .9103714   1.0140428          45
+  {txt}COVID Sho {c |}  {res} 3.9949442    2.950014          19
+  {txt} Recovery {c |}  {res} 1.0199578   .85840449         188
+{txt}{hline 12}{c +}{hline 36}
+      Total {c |}  {res} 1.2246934   1.4083151         252
+
+{txt}W0  = {res} 66.899661{txt}   df({res}2, 249{txt})     Pr > F = {res}0.00000000
+
+{txt}W50 = {res} 56.750364{txt}   df({res}2, 249{txt})     Pr > F = {res}0.00000000
+
+{txt}W10 = {res} 62.701112{txt}   df({res}2, 249{txt})     Pr > F = {res}0.00000000
+
+{com}. oneway abs_daily_return period, tabulate
+
+            {txt}{c |}     Summary of abs_daily_return
+     period {c |}        Mean   Std. dev.       Freq.
+{hline 12}{c +}{hline 36}
+  Pre-COVID {c |}  {res}  .9103714   1.0140428          45
+  {txt}COVID Sho {c |}  {res} 3.9949442    2.950014          19
+  {txt} Recovery {c |}  {res} 1.0199578   .85840449         188
+{txt}{hline 12}{c +}{hline 36}
+      Total {c |}  {res} 1.2246934   1.4083151         252
+
+                        {txt}Analysis of variance
+    Source              SS         df      MS            F     Prob > F
+{hline 72}
+Between groups     {res} 158.137761      2   79.0688803     57.96     0.0000
+{txt} Within groups     {res} 339.683425    249   1.36419046
+{txt}{hline 72}
+    Total          {res} 497.821185    251   1.98335134
+
+{txt}Bartlett's equal-variances test: chi2({res}2{txt}) = {res} 93.0253{txt}    Prob>chi2 = {res}0.000
+
+{com}. kwallis abs_daily_return, by(period)
+
+{txt}Kruskal–Wallis equality-of-populations rank test
+
+  {c TLC}{hline 13}{c TT}{hline 5}{c TT}{hline 10}{c TRC}
+  {c |} {res}     period {txt}{c |} {res}Obs {txt}{c |} {res}Rank sum {txt}{c |}
+  {c LT}{hline 13}{c +}{hline 5}{c +}{hline 10}{c RT}
+  {c |} {res}  Pre-COVID {txt}{c |} {res} 45 {txt}{c |} {res} 4813.00 {txt}{c |}
+  {c |} {res}COVID Shock {txt}{c |} {res} 19 {txt}{c |} {res} 3828.00 {txt}{c |}
+  {c |} {res}   Recovery {txt}{c |} {res}188 {txt}{c |} {res}23237.00 {txt}{c |}
+  {c BLC}{hline 13}{c BT}{hline 5}{c BT}{hline 10}{c BRC}
+
+  chi2(2) = {res}{ralign 6:23.634}
+{txt}{ralign 9:Prob} = {res}{ralign 6:0.0001}
+
+{txt}  chi2(2) with ties = {res}{ralign 6:23.634}
+{txt}{ralign 19:Prob} = {res}{ralign 6:0.0001}
+
+{com}. ranksum abs_daily_return if period == 1 | period == 2, by(period)
+
+{txt}Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period {c |}      Obs    Rank sum    Expected
+{hline 13}{c +}{hline 33}
+   Pre-COVID {c |}{res}{col 17}     45{col 26}      1173{col 38}    1462.5
+ {txt}COVID Shock {c |}{res}{col 17}     19{col 26}       907{col 38}     617.5
+{txt}{hline 13}{c +}{hline 33}
+    Combined {c |}{res}{col 17}     64{col 26}      2080{col 38}      2080
+
+{txt}Unadjusted variance{col 22}{res}   4631.25
+{txt}Adjustment for ties{col 22}{res}      0.00
+{txt}{col 22}{hline 10}
+Adjusted variance{col 22}{res}   4631.25
+
+{txt}H0: abs_da~n(period==Pre-COVID) = abs_da~n(period==COVID Shock)
+{col 10}z = {res}{ralign 6:-4.254}
+{txt}{col 1}Prob > |z| = {res}{ralign 6:0.0000}
+{txt}{col 1}Exact prob = {res}{ralign 6:0.0000}
+
+{com}. ranksum abs_daily_return if period == 2 | period == 3, by(period)
+
+{txt}Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period {c |}      Obs    Rank sum    Expected
+{hline 13}{c +}{hline 33}
+ COVID Shock {c |}{res}{col 17}     19{col 26}      3111{col 38}      1976
+    {txt}Recovery {c |}{res}{col 17}    188{col 26}     18417{col 38}     19552
+{txt}{hline 13}{c +}{hline 33}
+    Combined {c |}{res}{col 17}    207{col 26}     21528{col 38}     21528
+
+{txt}Unadjusted variance{col 22}{res}  61914.67
+{txt}Adjustment for ties{col 22}{res}      0.00
+{txt}{col 22}{hline 10}
+Adjusted variance{col 22}{res}  61914.67
+
+{txt}H0: abs_da~n(period==COVID Shock) = abs_da~n(period==Recovery)
+{col 10}z = {res}{ralign 6:4.561}
+{txt}{col 1}Prob > |z| = {res}{ralign 6:0.0000}
+
+{txt}Note: Exact p-value is not computed by default for sample sizes > 200.
+      Use option {bf:exact} to compute it.
+
+{com}. ranksum abs_daily_return if period == 1 | period == 3, by(period)
+
+{txt}Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period {c |}      Obs    Rank sum    Expected
+{hline 13}{c +}{hline 33}
+   Pre-COVID {c |}{res}{col 17}     45{col 26}      4675{col 38}      5265
+    {txt}Recovery {c |}{res}{col 17}    188{col 26}     22586{col 38}     21996
+{txt}{hline 13}{c +}{hline 33}
+    Combined {c |}{res}{col 17}    233{col 26}     27261{col 38}     27261
+
+{txt}Unadjusted variance{col 22}{res} 164970.00
+{txt}Adjustment for ties{col 22}{res}      0.00
+{txt}{col 22}{hline 10}
+Adjusted variance{col 22}{res} 164970.00
+
+{txt}H0: abs_da~n(period==Pre-COVID) = abs_da~n(period==Recovery)
+{col 10}z = {res}{ralign 6:-1.453}
+{txt}{col 1}Prob > |z| = {res}{ralign 6:0.1463}
+
+{txt}Note: Exact p-value is not computed by default for sample sizes > 200.
+      Use option {bf:exact} to compute it.
+
+{com}. summarize date_stata
+
+{txt}    Variable {c |}        Obs        Mean    Std. dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 2}date_stata {c |}{res}        501    21915.62    211.5856      21551      22280
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\Tushar\Desktop\IIT Dhanbad\SEM - 3\Computational Finance\Project\JSE_ALSI_COVID_Stata\JSE_ALSI_COVID_FINAL_ANALYSIS.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}20 Aug 2026, 16:39:22
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

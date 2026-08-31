@@ -1,0 +1,247 @@
+
+
+      name:  <unnamed>
+       log:  C:\Users\Tushar\Desktop\IIT Dhanbad\SEM - 3\Computational Finance\Project\JSE_ALSI_COVID_Stata\JSE_ALSI_COVID_FINAL_ANALYSIS.smcl
+  log type:  smcl
+ opened on:  20 Aug 2026, 16:32:32
+
+. describe
+
+Contains data from JSE_ALSI_COVID_FINAL_ANALYSIS.dta
+ Observations:           501                  
+    Variables:            12                  20 Aug 2026 16:30
+
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+
+{bind:%10s      }Date
+{bind:%9.0g     }Open
+{bind:%9.0g     }High
+{bind:%9.0g     }Low
+{bind:%9.0g     }Close
+{bind:%9.0g     }Adj Close
+{bind:%8.0g     }Volume
+{bind:%63s      }Source
+{bind:%td       }
+{bind:%9.0g     }
+{bind:%9.0g     }
+{bind:%11.0g    }period_lbl
+
+Sorted by: date_stata
+
+. tabulate period, missing
+
+     period       Freq.     Percent        Cum.
+
+  Pre-COVID          45        8.98        8.98
+COVID Shock          19        3.79       12.77
+   Recovery         188       37.52       50.30
+          .         249       49.70      100.00
+
+      Total         501      100.00
+
+. misstable summarize date_stata close daily_return abs_daily_return
+Obs<.
+
+ Unique
+Variable Obs=.Obs>.Obs<. valuesMinMax
+  
+  daily_return          1       500      500  -9.721263    7.531619
+  abs_daily_~n          1       500      500   .0037962    9.721263
+  
+
+. tabstat abs_daily_return, by(period) statistics(n mean sd min max)
+
+Summary for variables: abs_daily_return
+Group variable: period 
+
+ 
+         N      Mean        SD       Min       Max
+
+ 
+
+        45  .9103714  1.014043  .0450765  4.503052
+ 
+
+        19  3.994944  2.950014  .0179862  9.721263
+ 
+
+       188  1.019958  .8584045  .0037962  3.880218
+
+ 
+
+       252  1.224693  1.408315  .0037962  9.721263
+
+. bysort period: swilk abs_daily_return if period < .
+
+-> period = Pre-COVID
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable         ObsWVz       Prob>z
+
+abs_daily_~n          45    0.75482     10.617     5.007    0.00000
+
+-> period = COVID Shock
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable         ObsWVz       Prob>z
+
+abs_daily_~n          19    0.94221      1.319     0.557    0.28888
+
+-> period = Recovery
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable         ObsWVz       Prob>z
+
+abs_daily_~n         188    0.88473     16.297     6.401    0.00000
+
+-> period = .
+
+                   Shapiro–Wilk W test for normal data
+
+    Variable         ObsWVz       Prob>z
+
+abs_daily_~n           0          .          .         .          .
+
+Note: The normal approximation to the
+sampling distribution of W' is valid for
+4<=n<=2000.
+
+. robvar abs_daily_return, by(period)
+
+                 Summary of abs_daily_return
+     period         Mean   Std. dev.       Freq.
+
+  Pre-COVID     .9103714   1.0140428          45
+  COVID Sho    3.9949442    2.950014          19
+   Recovery    1.0199578   .85840449         188
+
+      Total    1.2246934   1.4083151         252
+
+W0  =  66.899661   df(2, 249)     Pr > F = 0.00000000
+
+W50 =  56.750364   df(2, 249)     Pr > F = 0.00000000
+
+W10 =  62.701112   df(2, 249)     Pr > F = 0.00000000
+
+. oneway abs_daily_return period, tabulate
+
+                 Summary of abs_daily_return
+     period         Mean   Std. dev.       Freq.
+
+  Pre-COVID     .9103714   1.0140428          45
+  COVID Sho    3.9949442    2.950014          19
+   Recovery    1.0199578   .85840449         188
+
+      Total    1.2246934   1.4083151         252
+
+                        Analysis of variance
+    Source              SS         df      MS            F     Prob > F
+
+Between groups      158.137761      2   79.0688803     57.96     0.0000
+ Within groups      339.683425    249   1.36419046
+
+    Total           497.821185    251   1.98335134
+
+Bartlett's equal-variances test: chi2(2) =  93.0253    Prob>chi2 = 0.000
+
+. kwallis abs_daily_return, by(period)
+
+Kruskal–Wallis equality-of-populations rank test
+
+  
+        period  Obs  Rank sum 
+  
+     Pre-COVID   45   4813.00 
+   COVID Shock   19   3828.00 
+      Recovery  188  23237.00 
+  
+
+  chi2(2) = 
+ = 
+
+  chi2(2) with ties = 
+ = 
+
+. ranksum abs_daily_return if period == 1 | period == 2, by(period)
+
+Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period       Obs    Rank sum    Expected
+
+   Pre-COVID      45      1173    1462.5
+ COVID Shock      19       907     617.5
+
+    Combined      64      2080      2080
+
+Unadjusted variance   4631.25
+Adjustment for ties      0.00
+
+Adjusted variance   4631.25
+
+H0: abs_da~n(period==Pre-COVID) = abs_da~n(period==COVID Shock)
+z = 
+Prob > |z| = 
+Exact prob = 
+
+. ranksum abs_daily_return if period == 2 | period == 3, by(period)
+
+Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period       Obs    Rank sum    Expected
+
+ COVID Shock      19      3111      1976
+    Recovery     188     18417     19552
+
+    Combined     207     21528     21528
+
+Unadjusted variance  61914.67
+Adjustment for ties      0.00
+
+Adjusted variance  61914.67
+
+H0: abs_da~n(period==COVID Shock) = abs_da~n(period==Recovery)
+z = 
+Prob > |z| = 
+
+Note: Exact p-value is not computed by default for sample sizes > 200.
+      Use option  to compute it.
+
+. ranksum abs_daily_return if period == 1 | period == 3, by(period)
+
+Two-sample Wilcoxon rank-sum (Mann–Whitney) test
+
+      period       Obs    Rank sum    Expected
+
+   Pre-COVID      45      4675      5265
+    Recovery     188     22586     21996
+
+    Combined     233     27261     27261
+
+Unadjusted variance 164970.00
+Adjustment for ties      0.00
+
+Adjusted variance 164970.00
+
+H0: abs_da~n(period==Pre-COVID) = abs_da~n(period==Recovery)
+z = 
+Prob > |z| = 
+
+Note: Exact p-value is not computed by default for sample sizes > 200.
+      Use option  to compute it.
+
+. summarize date_stata
+
+    Variable         Obs        Mean    Std. dev.       Min        Max
+
+date_stata         501    21915.62    211.5856      21551      22280
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\Tushar\Desktop\IIT Dhanbad\SEM - 3\Computational Finance\Project\JSE_ALSI_COVID_Stata\JSE_ALSI_COVID_FINAL_ANALYSIS.smcl
+  log type:  smcl
+ closed on:  20 Aug 2026, 16:39:22
+
